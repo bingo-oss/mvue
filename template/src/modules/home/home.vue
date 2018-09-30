@@ -1,0 +1,109 @@
+<style lang="scss">
+  @import "./home.scss";
+</style>
+<template>
+  <div class="layout" v-bind:class="{'layout-header-hide': hide('top') , 'layout-hide-menu' :hide('left') }">
+    <b-header v-if="!hide('top')">
+      <template slot="left">
+        <Dropdown placement="bottom-start">
+          <Button type="text">
+            服务
+            <Icon type="ios-arrow-down ml-sm"></Icon>
+          </Button>
+          <DropdownMenu slot="list">
+            <div class="p-md">
+              <Button>Default</Button>
+              <Button type="primary">Primary</Button>
+              <Button type="dashed">Dashed</Button>
+              <Button type="text">Text</Button>
+            </div>
+          </DropdownMenu>
+        </Dropdown>
+      </template>
+      <template slot="right">
+
+        <ul class="topbar-menu">
+          <li>
+            <Tooltip content="首页" placement="bottom">
+              <router-link :to="{name:'default'}">
+                <Button type="text" icon="ios-home" ></Button>
+              </router-link>
+            </Tooltip>
+          </li>
+          <li>
+            <Tooltip content="购物车" placement="bottom">
+              <router-link :to="{name:'default'}">
+                <Button type="text" icon="ios-cart"></Button>
+              </router-link>
+            </Tooltip>
+          </li>
+          <li>
+            <Tooltip content="工单" placement="bottom">
+              <Badge :count="1">
+                <router-link :to="{name:'default'}">
+                  <Button type="text" icon="ios-paper"></Button>
+                </router-link>
+              </Badge>
+            </Tooltip>
+          </li>
+        </ul>
+      </template>
+    </b-header>
+    <Layout :class="'ivu-layout-has-sider'" class="layout-content">
+      <b-menu v-if="!hide('left')" :menus="menu"></b-menu>
+      <Content>
+        <b-router-tab></b-router-tab>
+        <!--自动生成的页面不缓存组件-->
+        <div class="bvue-page-tabcontent" v-if="isAutoPages()">
+          <router-view :key="$route.fullPath"></router-view>
+        </div>
+        <div class="bvue-page-tabcontent" v-else>
+          <keep-alive>
+            <router-view v-if="$route.meta.keepAlive"></router-view>
+          </keep-alive>
+          <router-view v-if="!$route.meta.keepAlive"></router-view>
+        </div>
+      </Content>
+    </Layout>
+  </div>
+</template>
+<script>
+  //使用后端接口时打开
+  //import { menuService } from "mvue-components";
+  //demo 菜单，使用后端接口时，注释掉
+  import demoMenu from './demo-menu';
+  export default {
+    data: function () {
+      return {
+        menu: [],
+      }
+    },
+    mounted: function () {
+      const self = this;
+      /** 使用后端接口时打开
+      menuService().published({ orderby: "displayOrder asc" }).then(function ({ data }) {
+        self.menu = data;
+      });
+      */
+      //demo 菜单，使用后端接口时，注释掉
+      self.menu=demoMenu;
+    },
+    methods:{
+      hide(type){
+        var types=this.$route.query._hide;
+        if(!types){
+          return false;
+        }
+        types=types.split(",");
+        return _.includes(types,type);
+      },
+      isAutoPages(){
+        var key=this.$route.path;
+        if(_.startsWith(key,"/pages/")){
+          return true;
+        }
+        return false;
+      }
+    }
+  }
+</script>
