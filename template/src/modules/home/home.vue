@@ -77,6 +77,7 @@
     },
     mounted: function () {
       const self = this;
+      //远程菜单：menuService().published({ orderby: "displayOrder asc" })
       menuService().local({ orderby: "displayOrder asc" }).then(function ({ data }) {
         self.menu = data;
       });
