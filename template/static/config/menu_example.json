@@ -1,4 +1,4 @@
-const menus=[
+[
     {
         "id":"firstMenuGroup",
         "title":"基础教学",
@@ -11,5 +11,4 @@ const menus=[
             }
         ]
     }
-];
-export default menus;
+]
