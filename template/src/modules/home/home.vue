@@ -69,6 +69,7 @@
 </template>
 <script>
   import { menuService } from "mvue-components";
+  import  mvueCore from 'mvue-toolkit';
   export default {
     data: function () {
       return {
@@ -77,10 +78,15 @@
     },
     mounted: function () {
       const self = this;
-      //远程菜单：menuService().published({ orderby: "displayOrder asc" })
-      menuService().local({ orderby: "displayOrder asc" }).then(function ({ data }) {
-        self.menu = data;
-      });
+      if(mvueCore.config.getConfigVal("settings.menu.remote")){
+        menuService().published({ orderby: "displayOrder asc" }).then(function ({ data }) {
+          self.menu = data;
+        });
+      }else{
+        menuService().local({ orderby: "displayOrder asc" }).then(function ({ data }) {
+          self.menu = data;
+        });
+      }
     },
     methods:{
       hide(type){
