@@ -54,7 +54,7 @@ function run(devMode){
             files[key] = f.replace(/('|")/g, '\\$1')
         }
     });
-    console.log(files);
+    //console.log(files);
     var filesValues=[];
     for(let key in files) {
         if (files.hasOwnProperty(key)) {
