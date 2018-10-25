@@ -1,6 +1,7 @@
 var path= require('path');
 var _=require('lodash');
 
+
 function cleanChildrenRoutes(routes, isChild = false) {
   let start = -1
   const routesIndex = []
@@ -63,10 +64,6 @@ exports.createRoutes = function createRoutes(files, srcDir, pagesDir,pageTmplDir
     }
     //js文件对应的组件从模板页面组件产生
     if(file.endsWith('.js')){
-      const start=file.lastIndexOf('/')+1;
-      const end=file.lastIndexOf('.');
-      const len=end-start;
-      const fileName=file.substr(start,len);
       route.component=`${pageTmplDir}`;
       route.meta={type:"js",file:file};
     }
