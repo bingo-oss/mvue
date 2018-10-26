@@ -23,6 +23,10 @@
         return;
       }
       var titleField=metaEntity.firstTitleField();
+      var quickSearchFields=[];
+      if(titleField!=null){
+        quickSearchFields.push(titleField.name);
+      }
       return {
         header:{
           title:`${metaEntity.title || metaEntity.name}列表`,
@@ -34,7 +38,7 @@
           btns:["create","export","import"],
           singleBtns:["edit","del"],
           quicksearch:{
-            fields:[titleField.name],
+            fields:quickSearchFields,
             placeholder:"根据名称搜索"
           }
         }
