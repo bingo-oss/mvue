@@ -5,6 +5,7 @@
   <div class="layout" v-bind:class="{'layout-header-hide': hide('top') , 'layout-hide-menu' :hide('left') }">
     <b-header v-if="!hide('top')">
       <template slot="right">
+
         <ul class="topbar-menu">
           <li>
             <Tooltip content="首页" placement="bottom">

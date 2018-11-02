@@ -97,7 +97,7 @@ export default {
         getCurrentRolePerms(){//获取当前角色的菜单权限
             permService().query({
                 joins:'permScope ps',
-                filters:`principalId eq ${this.currentRole} and ps.module eq menu`,
+                filters:`principalId eq ${this.currentRole} and ps.module eq menu and ps.resourceType eq DATA`,
                 limit:1000
             }).then(({data})=>{
                 //当前角色的所有菜单权限标记map，可用来计算需要删除的菜单权限
