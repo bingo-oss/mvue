@@ -3,7 +3,7 @@
 </style>
 <template>
   <div class="layout" v-bind:class="{'layout-header-hide': hide('top') , 'layout-hide-menu' :hide('left') }">
-    <b-header v-if="!hide('top')">
+    <b-header v-if="!hide('top')" title="mvue模板">
       <template slot="right">
 
         <ul class="topbar-menu">
