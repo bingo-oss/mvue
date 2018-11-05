@@ -1,12 +1,5 @@
 <template>
-  <div class="bvue-page">
-    <b-childheader :title="header.title" :subtitle="header.description" :showBack="header.showBack" ></b-childheader>
-    <div class="bvue-page-body">
-      <Card>
-        <meta-layout :layout="pageSettings.layout"></meta-layout>
-      </Card>
-    </div>
-  </div>
+  <meta-page :header="header" :pageSettings="pageSettings"></meta-page>
 </template>
 <script>
   import confs from '../pages/auto-page-confs';
