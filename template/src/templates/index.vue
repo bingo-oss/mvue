@@ -10,7 +10,7 @@
       var key=this.$route.matched[this.$route.matched.length-1].path;
       var pageSettings=mvueCore.metaLayoutConvertor.convert(_.cloneDeep(confs[key]),self);
       var header={
-        title:pageSettings.title||"未设置",
+        title:pageSettings.title,
         description:pageSettings.description
       };
       return {
