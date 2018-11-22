@@ -1,9 +1,11 @@
-import isUndefined from "lodash/isUndefined";
-
 var cachedContext={
+    mvueCore:null,
+    autoPageConfs:null,
+    mvueComponents:null,  
     router:null,
     mvueToolkit:null,
-    Vue:null,
+    Vue:null,//全局Vue模块，例如Vue.use
+    currentVue:null,//应用的根Vue对象，例如currentVue.$route
     iframeId:null,
     store:null
 }
@@ -87,8 +89,11 @@ export default {
   getStore(){
       return cachedContext.store;
   },
+  setCurrentVue(currentVue) {
+    cachedContext.currentVue=currentVue;
+  },
   getCurrentVue() {
-    return cachedContext.Vue;
+    return cachedContext.currentVue;
   },
   info: function (opts) {
     var vue = this.getCurrentVue();
@@ -164,5 +169,23 @@ export default {
         }, 300);
       }
     }
+  },
+  setMvueCore(mvueCore){
+      cachedContext.mvueCore=mvueCore;
+  },
+  getMvueCore(){
+      return cachedContext.mvueCore;
+  },
+  setMvueComponents(_mvueComponents){
+      cachedContext.mvueComponents=_mvueComponents;
+  },
+  getMvueComponents(){
+      return cachedContext.mvueComponents;
+  },
+  setAutoPageConfs(autoPageConfs){
+      cachedContext.autoPageConfs=autoPageConfs;
+  },
+  getAutoPageConfs(){
+      return cachedContext.autoPageConfs;
   }
 }
