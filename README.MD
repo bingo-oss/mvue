@@ -1,1 +1,1 @@
-[mVue开发文档](https://dev.bingocc.com:8443/mvue-doc) 
+[mvue开发文档](https://dev.bingocc.com:8443/mvue-doc) 
