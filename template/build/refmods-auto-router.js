@@ -3,11 +3,13 @@ var nuxtUtils= require('./nuxt-utils');
 const fs = require('fs')
 var path = require('path')
 var chokidar = require('chokidar');
-var autoConfs = require('./auto-confs');
-var refmodsAutoRouter = require('./refmods-auto-router');
+var refmodsAutoConfs = require('./refmods-auto-confs');
 var watched=false;
 var changedQueue=[];
 var sleep = require('sleep');
+
+var refmods = require('./refmods');
+
 function smartRun(i){
     //console.log("--------"+i);
     //如果数据变化，先往变化队列推一条数据
@@ -42,59 +44,63 @@ function doWatch(pagesPath){
  * 自动扫描 src/pages/ 下的所有vue文件按文件名生成默认的路由
  */
 function run(devMode){
-    var pagesPath='src/pages';
-    var pageTmplDir=`src/templates/index`;
-    var ignoreFiles=`src/pages/@(auto-page-confs|auto-routes).js`;
-    if(devMode&&!watched){
-        watched=true;
-        doWatch(pagesPath)
-    }
-    const files = {};
-    glob.sync(`${pagesPath}/**/*.@(vue|js)`,{ignore:ignoreFiles}).forEach(f=>{
-        const key = f.replace(/\.(js|vue)$/, '')
-        if (/\.vue$/.test(f) || !files[key]) {
-            files[key] = f.replace(/('|")/g, '\\$1')
+    var refModsRoutes={};
+    refmods.forEach(refmod => {
+        var pagesPath=`node_modules/${refmod}/src/pages`;
+        var pageTmplDir='';
+        var ignoreFiles=`node_modules/${refmod}/src/pages/@(auto-page-confs|auto-routes).js`;
+        if(devMode&&!watched){
+            watched=true;
+            doWatch(pagesPath)
         }
+        const files = {};
+        glob.sync(`${pagesPath}/**/*.@(vue|js)`,{ignore:ignoreFiles}).forEach(f=>{
+            const key = f.replace(/\.(js|vue)$/, '')
+            if (/\.vue$/.test(f) || !files[key]) {
+                files[key] = f.replace(/('|")/g, '\\$1')
+            }
+        });
+        //console.log(files);
+        var filesValues=[];
+        for(let key in files) {
+            if (files.hasOwnProperty(key)) {
+                const element = files[key];
+                filesValues.push(element);
+            }
+        }
+        //console.log(filesValues);
+        var routes=nuxtUtils.createRoutes(
+            filesValues,
+            pagesPath,
+            pagesPath,
+            pageTmplDir
+        )
+        //console.log(JSON.stringify(routes));
+        writeJs(pagesPath,JSON.stringify(routes,(key,value)=>{
+            if(key=="component"){
+                if(value){
+                    return `##require_placeholder_begin##('${value}')##require_placeholder_end##`;
+                }else{
+                    return undefined;
+                }
+            }else if(key=='meta'){
+                return undefined;
+            }else{
+                return value;
+            }
+        },'\t'))
+        console.log(`##引用模块${refmod}自动路由重写完成--_--##`);
+        refModsRoutes[refmod]=routes;
     });
-    //console.log(files);
-    var filesValues=[];
-    for(let key in files) {
-        if (files.hasOwnProperty(key)) {
-            const element = files[key];
-            filesValues.push(element);
-        }
-    }
-    //console.log(filesValues);
-    var routes=nuxtUtils.createRoutes(
-        filesValues,
-        pagesPath,
-        pagesPath,
-        pageTmplDir
-    )
-    //console.log(JSON.stringify(routes));
-    writeJs(pagesPath,JSON.stringify(routes,(key,value)=>{
-        if(key=="component"){
-            return `##require_placeholder_begin##('${value}')##require_placeholder_end##`;
-        }else{
-            return value;
-        }
-    },'\t'))
     //动态打包所有的组件配置到一个文件
-    autoConfs.run(pagesPath,routes);
-    //npm run dev 模式下引用模块的页面路由也要自动生成
-    refmodsAutoRouter.run(devMode);
-    //某些系统下，同步写文件之后webpack监听程序并不知道，所以稍等两秒
-    sleep.sleep(2);
+    refmodsAutoConfs.run(refModsRoutes);
 }
 function writeJs(filePath,routes){
     routes=routes.replace(/\"##require_placeholder_begin##/g,'require').replace(/##require_placeholder_end##\"/g,'');
     var jsContent=`var autoRoutes=${routes}
 export default autoRoutes`;
     var outputFile=path.join(__dirname,'../',filePath,'auto-routes.js')
-    //console.log(outputFile)
-    //console.dir(__dirname)
     fs.writeFileSync(outputFile,jsContent)
-    console.log("##自动路由重写完成--_--##");
 }
 module.exports={
     run:run

@@ -186,6 +186,25 @@ export default {
       cachedContext.autoPageConfs=autoPageConfs;
   },
   getAutoPageConfs(){
-      return cachedContext.autoPageConfs;
+      //合并来自引用模块的页面配置
+      let _pageConfs={};
+      let mods=this.getMvueToolkit().moduleManager.mods;
+      mods.forEach(mod => {
+        if(mod.pages&&mod.pages.pageConfs){
+          _pageConfs=Object.assign(_pageConfs,mod.pages.pageConfs);
+        }
+      });
+      return Object.assign(_pageConfs,cachedContext.autoPageConfs);
+  },
+  //获取所有引用模块提供的导航菜单
+  getModsMenus(){
+      let modsMenus=[];
+      let mods=this.getMvueToolkit().moduleManager.mods;
+      mods.forEach(mod => {
+        if(mod.menus){
+          modsMenus=modsMenus.concat(mod.menus);
+        }
+      });
+      return modsMenus;
   }
 }
