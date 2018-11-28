@@ -59,7 +59,7 @@ export default {
     if(this.isViewMode){
       prefix='查看';
       action="view";
-    }else if(this.id){
+    }else if(this.form.recordId){
       prefix='编辑';
       action="edit";
     }else{
