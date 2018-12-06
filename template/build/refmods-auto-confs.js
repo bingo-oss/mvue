@@ -4,7 +4,7 @@ var path = require('path')
 var refmods = require('./refmods');
 
 function writeConfs(pagesPath,files){
-    var outputFile=path.join(__dirname,'../',pagesPath,'auto-page-confs.js')
+    var outputFile=path.join(pagesPath,'auto-page-confs.js')
     var fileJson=JSON.stringify(files,null,'\t').replace(/\"##require_placeholder_begin##/g,'require').replace(/##require_placeholder_end##\"/g,'.default');
     var jsContent=`const confs=${fileJson}`;
     jsContent+=`\r\nexport default confs`
@@ -29,11 +29,11 @@ function buildConf(pagesPath,autoConfs,routes,parentPath){
 function run(refModsRoutes){
     refmods.forEach(refmod => {
         let autoConfs={};
-        let refModRoutes=refModsRoutes[refmod];
-        let pagesPath=`node_modules/${refmod}/src/pages`;
+        let refModRoutes=refModsRoutes[refmod.name];
+        let pagesPath=`${refmod.path}/src/pages`;
         buildConf(pagesPath,autoConfs,refModRoutes);
         writeConfs(pagesPath,autoConfs);
-        console.log(`##引用模块${refmod}自动页面配置生成完成--_--##`);
+        console.log(`##引用模块${refmod.name}自动页面配置生成完成--_--##`);
     });
 }
 module.exports={
