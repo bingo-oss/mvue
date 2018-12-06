@@ -36,8 +36,11 @@ var devMiddleware = require('webpack-dev-middleware')(compiler, { //将编译后
   quiet: false,
   stats:{
     colors:true
+  },
+  watchOptions: {
+    aggregateTimeout: 500
   }
-})
+});
 
 var hotMiddleware = require('webpack-hot-middleware')(compiler, {  //热加载
   log: () => {}

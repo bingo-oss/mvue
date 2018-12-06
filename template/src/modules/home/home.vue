@@ -3,7 +3,7 @@
 </style>
 <template>
   <div class="layout" v-bind:class="{'layout-header-hide': hide('top') , 'layout-hide-menu' :hide('left') }">
-    <b-header v-if="!hide('top')" title="mvue模板">
+    <b-header v-if="!hide('top')">
       <template slot="right">
 
         <ul class="topbar-menu">
@@ -18,7 +18,7 @@
       </template>
     </b-header>
     <Layout :class="'ivu-layout-has-sider'" class="layout-content">
-      <b-menu v-if="!hide('left')" :menus="menu"></b-menu>
+      <b-menu v-if="!hide('left')" :menus="menu" ref="navMenuRef" @on-menu-selected="handleOnMenuSelected"></b-menu>
       <Content>
         <b-router-tab></b-router-tab>
         <!--自动生成的页面不缓存组件-->
@@ -43,6 +43,12 @@
       return {
         menu: [],
       }
+    },
+    beforeRouteUpdate (to, from, next) {
+      if(this.$refs.navMenuRef){
+        this.$refs.navMenuRef.setActiveMenu(to);
+      }
+      next();
     },
     mounted: function () {
       const self = this;
@@ -71,6 +77,9 @@
           return true;
         }
         return false;
+      },
+      handleOnMenuSelected(){
+        this.$store.commit("core/clearGridStatus");
       }
     }
   }

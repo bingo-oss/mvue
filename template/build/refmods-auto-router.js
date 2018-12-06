@@ -46,9 +46,10 @@ function doWatch(pagesPath){
 function run(devMode){
     var refModsRoutes={};
     refmods.forEach(refmod => {
-        var pagesPath=`node_modules/${refmod}/src/pages`;
+        var modulePath=refmod.path;
+        var pagesPath=`${modulePath}/src/pages`;
         var pageTmplDir='';
-        var ignoreFiles=`node_modules/${refmod}/src/pages/@(auto-page-confs|auto-routes).js`;
+        var ignoreFiles=`${modulePath}/src/pages/@(auto-page-confs|auto-routes).js`;
         if(devMode&&!watched){
             watched=true;
             doWatch(pagesPath)
@@ -90,17 +91,18 @@ function run(devMode){
                 return value;
             }
         },'\t'))
-        console.log(`##引用模块${refmod}自动路由重写完成--_--##`);
-        refModsRoutes[refmod]=routes;
+        console.log(`##引用模块${refmod.name}自动路由重写完成--_--##`);
+        refModsRoutes[refmod.name]=routes;
     });
     //动态打包所有的组件配置到一个文件
     refmodsAutoConfs.run(refModsRoutes);
 }
+
 function writeJs(filePath,routes){
     routes=routes.replace(/\"##require_placeholder_begin##/g,'require').replace(/##require_placeholder_end##\"/g,'');
     var jsContent=`var autoRoutes=${routes}
 export default autoRoutes`;
-    var outputFile=path.join(__dirname,'../',filePath,'auto-routes.js')
+    var outputFile=path.join(filePath,'auto-routes.js')
     fs.writeFileSync(outputFile,jsContent)
 }
 module.exports={
