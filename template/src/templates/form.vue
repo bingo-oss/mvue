@@ -69,8 +69,12 @@ export default {
     if(this.hasError){
       return;
     }
-    this.metaEntity.getFormSettings().then(st=>{
-      this.form=this.metaEntity.extendUISettings(this.form,st || {});
+    this.metaEntity.getFormSettings(action).then(st=>{
+      if(st==null){
+        this.hasError=true;
+        return;
+      }
+      this.form=this.metaEntity.extendUISettings(this.form,st);
       this.isReady=true;
     });
   }
