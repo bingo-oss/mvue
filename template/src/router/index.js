@@ -2,6 +2,9 @@ import routesBase from "./routes-base";
 import mvueToolkit from "mvue-toolkit";
 import autoRoutes from '../pages/auto-routes';
 var routersData = mvueToolkit.router.toRealRoutes(routesBase,function (component) {
+  if(!_.isString(component)){
+    return component;
+  }
   return require('src/modules/' + component);
 });
 var propsResolve = function (router) {
