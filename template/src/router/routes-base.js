@@ -8,9 +8,6 @@ var routers = [
     },
     name: "default",
     path: "/",
-    redirect:{
-      name:'tutorial'//system.admin.menu
-    },
     component: "home/home.vue",
     children: [
       // 主页

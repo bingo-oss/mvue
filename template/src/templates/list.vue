@@ -3,8 +3,7 @@
     <b-childheader :title="header.title" :subtitle="header.description" :showBack="header.showBack" ></b-childheader>
     <div class="bvue-page-body">
       <Card >
-        <meta-grid v-if="isReady" ref="gridList" v-bind="grid">
-        </meta-grid>
+        <component  v-if="isReady" :is="grid.ctype" ref="gridList" v-bind="grid"></component>
         <Alert type="warning" v-if="hasError" show-icon style="margin: 20px 200px">
           页面错误
           <template slot="desc">
@@ -39,6 +38,7 @@
         },
         metaEntity:metaEntity,
         grid:{
+          ctype:"m-grid",
           entityName:metaEntity.name
         }
       }

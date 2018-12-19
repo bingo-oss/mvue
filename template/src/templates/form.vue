@@ -74,7 +74,7 @@ export default {
         this.hasError=true;
         return;
       }
-      this.form=this.metaEntity.extendUISettings(this.form,st);
+      this.form=this.metaEntity.extendUISettings(this.form,st || {});
       this.isReady=true;
     });
   }
