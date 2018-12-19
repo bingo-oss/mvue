@@ -43,7 +43,7 @@
         menu: {
           menus: []
         },
-        title: "MVue模板",
+        title: "品高云平台",
         logo:"static/images/logo.png"
       }
     },
