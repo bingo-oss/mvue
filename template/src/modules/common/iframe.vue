@@ -1,4 +1,4 @@
-<style lang="scss">
+<style lang="less">
     .bvue-page-iframe{
         position: absolute;
         left:0;

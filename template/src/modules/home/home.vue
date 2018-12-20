@@ -1,5 +1,5 @@
-<style lang="scss">
-  @import "./home.scss";
+<style lang="less">
+  @import "./home.less";
 </style>
 <template>
   <div class="layout" v-bind:class="{'layout-header-hide': hide('top') , 'layout-hide-menu' :hide('left') }">
