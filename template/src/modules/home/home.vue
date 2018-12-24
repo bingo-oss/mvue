@@ -3,7 +3,7 @@
 </style>
 <template>
   <div class="layout" v-bind:class="{'layout-header-hide': hide('top') , 'layout-hide-menu' :hide('left') }">
-    <m-header v-if="!hide('top')" :title="title">
+    <m-header v-if="!hide('top')" :title="title" :logo="logo">
       <template slot="right">
         <ul class="topbar-menu">
           <li>
@@ -17,7 +17,7 @@
       </template>
     </m-header>
     <Layout :class="'ivu-layout-has-sider'" class="layout-content">
-      <m-menu v-if="!hide('left')" v-bind="menu" ref="navMenuRef" @on-menu-selected="handleOnMenuSelected"></m-menu>
+      <m-menu v-if="!hide('left') && menuLoaded" v-bind="menu" ref="navMenuRef" @on-menu-selected="handleOnMenuSelected"></m-menu>
       <Content>
         <b-router-tab></b-router-tab>
         <!--自动生成的页面不缓存组件-->
@@ -43,6 +43,11 @@
         menu: {
           menus: []
         },
+        errorRouter:{
+          name:"error403",
+          query:null
+        },
+        menuLoaded:false,
         title: "品高云平台",
         logo:"static/images/logo.png"
       }
@@ -57,7 +62,9 @@
         self.logo = mvueCore.config.getConfigVal("settings.app.logo");
       }
       if (mvueCore.config.getConfigVal("settings.menu.remote")) {
-        menuService().published({orderby: "displayOrder asc"}).then(function ({data}) {
+        menuService().published({orderby: "displayOrder asc"},{onError:function (error) {
+            return self.onDeny(error);
+          }}).then(function ({data}) {
           self.prepareMenu(data);
           self.autoIndexPage();
         });
@@ -88,6 +95,7 @@
         this.$store.commit("core/clearGridStatus");
       },
       prepareMenu(rawMenu) {
+        this.menuLoaded=true;
         if (_.isArray(rawMenu)) {
           this.menu = {
             menus: rawMenu
@@ -119,7 +127,29 @@
               this.$router.push(indexRouter);
             }
           }
+        }else if(this.$route.name==this.errorRouter.name) {
+          if(this.$route.query["_url"]){
+            this.$router.push({path:this.$route.query["_url"]});
+          }
         }
+      },
+      onDeny(error){
+        var response=error.response;
+        if(!response){
+          return false;
+        }
+        if(response.status==403){
+          if(this.$route.name==this.errorRouter.name){
+            return true;
+          }
+          this.errorRouter["query"]={
+            "_hide":"left",
+            "_url":this.$route.fullPath
+          }
+          this.$router.push(this.errorRouter);
+          return true;
+        }
+        return false;
       }
     }
   }

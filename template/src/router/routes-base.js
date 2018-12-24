@@ -15,6 +15,16 @@ var routers = [
         name: "iframe",
         component: "common/iframe.vue",
         path: "iframe/:menuId"
+      },
+      {
+        name: "error403",
+        component: "common/error403.vue",
+        path: "/error-403"
+      },
+      {
+        name: "error",
+        component: "common/error.vue",
+        path: "/error"
       }
     ]
   },
