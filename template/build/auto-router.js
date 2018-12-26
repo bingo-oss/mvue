@@ -7,7 +7,7 @@ var autoConfs = require('./auto-confs');
 var refmodsAutoRouter = require('./refmods-auto-router');
 var watched=false;
 var changedQueue=[];
-var sleep = require('sleep');
+var sleep = require('thread-sleep');
 function smartRun(i){
     //console.log("--------"+i);
     //如果数据变化，先往变化队列推一条数据
@@ -84,7 +84,7 @@ function run(devMode){
     //npm run dev 模式下引用模块的页面路由也要自动生成
     refmodsAutoRouter.run(devMode);
     //某些系统下，同步写文件之后webpack监听程序并不知道，所以稍等两秒
-    sleep.sleep(2);
+    sleep(2000);
 }
 function writeJs(filePath,routes){
     routes=routes.replace(/\"##require_placeholder_begin##/g,'require').replace(/##require_placeholder_end##\"/g,'');
