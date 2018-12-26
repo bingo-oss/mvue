@@ -6,7 +6,6 @@ var chokidar = require('chokidar');
 var refmodsAutoConfs = require('./refmods-auto-confs');
 var watched=false;
 var changedQueue=[];
-var sleep = require('sleep');
 
 var refmods = require('./refmods');
 
