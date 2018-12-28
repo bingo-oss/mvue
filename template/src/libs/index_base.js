@@ -76,7 +76,7 @@ function startApp() {
   //加载应用配置
   mvueToolkit.config.loadServerConfig().then(()=>{
     Promise.all([
-      import('iview')
+      import(/* webpackChunkName: "iview" */'iview')
     ]).then(function ([iview]) {
       Vue.use(iview);
       Vue.use(mvueToolkit,{
