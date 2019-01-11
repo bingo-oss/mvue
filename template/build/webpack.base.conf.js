@@ -50,11 +50,7 @@ var webpackConfig={
         test: /\.js$/,
         exclude: _excludes,
         loader: 'babel-loader',
-        include: [resolve('src'), resolve('test')],
-        'options': {
-          'plugins': ['lodash'],
-          'presets': [['env', { 'modules': false, 'targets': { 'node': 4 } }]]
-        }
+        include: [resolve('src'), resolve('test')]
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
