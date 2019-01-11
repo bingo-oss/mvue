@@ -8,6 +8,8 @@ var watched=false;
 var changedQueue=[];
 
 var refmods = require('./refmods');
+const aiRelativeBasePath='src/ai/pages';
+const routerRelativePath='../../pages';
 
 function smartRun(i){
     //console.log("--------"+i);
@@ -46,6 +48,16 @@ function run(devMode){
     var refModsRoutes={};
     refmods.forEach(refmod => {
         var modulePath=refmod.path;
+        let moduleAiPath=path.join(modulePath,aiRelativeBasePath,'../');
+        let modulePagesPath=path.join(modulePath,aiRelativeBasePath);
+        let moduleAiPathExists=fs.existsSync(moduleAiPath);
+        let modulePagesPathExists=fs.existsSync(modulePagesPath);
+        if(!moduleAiPathExists){
+            fs.mkdirSync(moduleAiPath);//src/ai
+        }
+        if(!modulePagesPathExists){
+            fs.mkdirSync(modulePagesPath);//src/ai/pages
+        }
         var pagesPath=`${modulePath}/src/pages`;
         var pageTmplDir='';
         var ignoreFiles=`${modulePath}/src/pages/@(auto-page-confs|auto-routes).js`;
@@ -76,10 +88,10 @@ function run(devMode){
             pageTmplDir
         )
         //console.log(JSON.stringify(routes));
-        writeJs(pagesPath,JSON.stringify(routes,(key,value)=>{
+        writeJs(modulePath,JSON.stringify(routes,(key,value)=>{
             if(key=="component"){
                 if(value){
-                    value=value.replace(pagesPath,'.');
+                    value=value.replace(pagesPath,routerRelativePath);
                     return `##require_placeholder_begin##('${value}')##require_placeholder_end##`;
                 }else{
                     return undefined;
@@ -97,11 +109,11 @@ function run(devMode){
     refmodsAutoConfs.run(refModsRoutes);
 }
 
-function writeJs(filePath,routes){
+function writeJs(modulePath,routes){
     routes=routes.replace(/\"##require_placeholder_begin##/g,'require').replace(/##require_placeholder_end##\"/g,'');
     var jsContent=`var autoRoutes=${routes}
 export default autoRoutes`;
-    var outputFile=path.join(filePath,'auto-routes.js')
+    var outputFile=path.join(modulePath,aiRelativeBasePath,'auto-routes.js')
     fs.writeFileSync(outputFile,jsContent)
 }
 module.exports={

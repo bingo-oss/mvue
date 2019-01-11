@@ -1,8 +1,9 @@
 var glob = require('glob')
 const fs = require('fs')
 var path = require('path')
-function writeConfs(pagesPath,files){
-    var outputFile=path.join(__dirname,'../',pagesPath,'auto-page-confs.js')
+const aiBasePath = path.join(__dirname,'../src/ai/pages');
+function writeConfs(files){
+    var outputFile=path.join(aiBasePath,'auto-page-confs.js')
     var fileJson=JSON.stringify(files,null,'\t').replace(/\"##require_placeholder_begin##/g,'require').replace(/##require_placeholder_end##\"/g,'.default');
     var jsContent=`const confs=${fileJson}`;
     jsContent+=`\r\nexport default confs`
@@ -24,10 +25,10 @@ function buildConf(autoConfs,routes,parentPath){
         }
     }
 }
-function run(pagesPath,routes){
+function run(routes){
     var autoConfs={};
     buildConf(autoConfs,routes);
-    writeConfs(pagesPath,autoConfs);
+    writeConfs(autoConfs);
 }
 module.exports={
     run:run

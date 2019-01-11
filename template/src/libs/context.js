@@ -1,3 +1,5 @@
+import asyncImportAll from '../ai/ref-mods/async/import-all';
+
 var cachedContext={
     mvueCore:null,
     autoPageConfs:null,
@@ -41,6 +43,7 @@ function getPageHeight() {
 }
 
 export default {
+
   setRouter(router) {
     cachedContext.router = router;
   },
@@ -198,13 +201,17 @@ export default {
   },
   //获取所有引用模块提供的导航菜单
   getModsMenus(){
-      let modsMenus=[];
-      let mods=this.getMvueToolkit().moduleManager.mods;
-      mods.forEach(mod => {
-        if(mod.menus){
-          modsMenus=modsMenus.concat(mod.menus);
-        }
-      });
-      return modsMenus;
+    return new Promise((resolve,reject)=>{
+      asyncImportAll.load().then(()=>{
+        let modsMenus=[];
+        let mods=this.getMvueToolkit().moduleManager.mods;
+        mods.forEach(mod => {
+          if(mod.menus){
+            modsMenus=modsMenus.concat(mod.menus);
+          }
+        });
+        resolve(modsMenus);
+      },()=>{reject();});
+    });
   }
 }
