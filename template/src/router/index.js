@@ -1,10 +1,8 @@
 import routesBase from "./routes-base";
 import mvueToolkit from "mvue-toolkit";
-import autoRoutes from '../pages/auto-routes';
+import autoRoutes from '../ai/pages/auto-routes';
+import asyncRoutes from '../ai/ref-mods/async/routes';
 var routersData = mvueToolkit.router.toRealRoutes(routesBase,function (component) {
-  if(!_.isString(component)){
-    return component;
-  }
   return require('src/modules/' + component);
 });
 var propsResolve = function (router) {
@@ -27,7 +25,7 @@ _routes.forEach(route=>{
     route.component=pageIndex;
   }
 });
-let _autoRoutes=_routes.concat(autoRoutes);
+let _autoRoutes=_routes.concat(autoRoutes,asyncRoutes);
 //将自动生成的路由附加到根路由上
 routersData[0].children=routersData[0].children.concat(_autoRoutes);
 routersData[0].children.push({

@@ -1,4 +1,6 @@
 require('./check-versions')()
+var refmodsRegister = require('./refmods-register');
+refmodsRegister.run();
 var autoRouter=require('./auto-router');
 autoRouter.run(false);
 process.env.NODE_ENV = 'production'

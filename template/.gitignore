@@ -16,3 +16,4 @@ src/config/config_override.js
 yarn.lock
 src/pages/auto-routes.js
 src/pages/auto-page-confs.js
+src/ai/*
