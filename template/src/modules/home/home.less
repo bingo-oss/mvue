@@ -1,25 +1,79 @@
 .layout-header-hide{
-    >.layout-content{
-        top:0;
-    }
+  >.layout-content{
+    top:0;
+  }
 }
 .topbar-menu{
-    list-style-type: none;
-    margin:0;
-    padding:0;
-    margin-right: 8px;
+  list-style-type: none;
+  margin:0;
+  padding:0;
+  margin-right: 8px;
 
-    >li{
-        float: left;
-        padding: 0 12px;
+  >li{
+    float: left;
+    padding: 0 12px;
 
-        .ivu-btn{
-            padding-left:0;
-            padding-right: 0;
-        }
+    .ivu-btn{
+      padding-left:0;
+      padding-right: 0;
     }
+  }
 }
 
 .ivu-select-dropdown {
   width: auto;
 }
+
+.com-wrapper{
+  margin: 0px;
+  padding: 0px;
+}
+.tree-list-sidebar{
+  background-color: #ffffff;
+  box-shadow: 4px 0 10px rgba(163, 163, 163, 0.2);
+
+  .menu-title{
+    padding: 16px;
+
+    h2{
+      font-size: 14px;
+      color: #444;
+      line-height: 22px;
+    }
+  }
+
+  .ivu-menu{
+    background: none;
+
+    .ivu-menu-item-active{
+      background-color: #e6f7ff;
+    }
+
+    &:after{
+      display: none;
+    }
+  }
+}
+
+.page-error.left-hidden{
+  padding: 50px 200px;
+}
+.page-error .ivu-alert-with-desc .ivu-alert-message{
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+.page-error .ivu-alert-with-desc.ivu-alert-with-icon{
+  padding: 16px 16px 16px 80px;
+}
+.page-error .ivu-alert-with-desc .ivu-alert-icon{
+  font-size: 40px;
+  top:35%;
+}
+.page-error .page-error-foot{
+  text-align: center;
+  margin-right: 100px;
+}
+.page-error .ivu-btn{
+  margin-right: 20px;
+}
+
