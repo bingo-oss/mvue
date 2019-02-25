@@ -1,13 +1,18 @@
 <template>
-  <div class="bvue-page">
-    <b-childheader :title="header.title" :subtitle="header.description" :showBack="header.showBack" ></b-childheader>
-    <div class="bvue-page-body">
-      <Card >
-        <component  v-if="isReady" :is="grid.ctype" ref="gridList" v-bind="grid"></component>
-        <Alert type="warning" v-if="hasError" show-icon style="margin: 20px 200px">
+  <div class="bvue-page"  :key="$route.fullPath"  :id="'default-grid-uuid-'+metaEntity.name">
+    <b-childheader v-if="isGrid()" :title="header.title" :showBack="false"></b-childheader>
+    <div v-if="isReady" class="bvue-page-body" >
+      <Card v-if="isGrid()">
+        <meta-layout  :layout="layout"></meta-layout>
+      </Card>
+      <meta-layout v-else :layout="layout"></meta-layout>
+    </div>
+    <div v-if="errorObj.has" class="bvue-page-body" >
+      <Card>
+        <Alert type="warning"  show-icon style="margin: 20px 200px">
           页面错误
           <template slot="desc">
-            该页面已被禁止访问，请通过配置启用该页面后，再重试！
+            {{ errorObj.message}}
           </template>
         </Alert>
       </Card>
@@ -16,21 +21,31 @@
 </template>
 <script>
   import  mvueCore from "mvue-core";
-  import contextHelper from "../libs/context";
   export default {
     data:function(){
       var entityName=this.$route.params.entityName;
       var metaEntity=mvueCore.metaBase.findMetaEntity(entityName);
+      var errorObj={has:false,code:null,message:null};
       if(metaEntity==null){
-        contextHelper.error({
-          content:`实体${entityName}不存在`
+        errorObj=_.assign(errorObj,{
+          has:true,
+          code:"404",
+          message:`实体${entityName}不存在`
         });
-        return;
+        metaEntity={title:"不存在实体"};
+      }else{
+        var hasError=!metaEntity.isUIEnable();
+        if(hasError){
+          errorObj=_.assign(errorObj,{
+            has:true,
+            code:"500",
+            message:`实体${metaEntity.title}列表，已被禁止访问，请通过配置启用该页面后，再重试！`
+          });
+        }
       }
-      var hasError=!metaEntity.isUIEnable();
       return {
         isReady:false,
-        hasError:hasError,
+        errorObj:errorObj,
         header:{
           title:`${metaEntity.title || metaEntity.name}列表`,
           description:metaEntity.description,
@@ -38,20 +53,38 @@
         },
         metaEntity:metaEntity,
         grid:{
-          ctype:"m-grid",
           entityName:metaEntity.name
         }
       }
     },
+    computed:{
+      layout() {
+        var pageSettings = mvueCore.metaLayoutConvertor.convert(this.grid, self);
+        var layout=pageSettings.layout;
+        return layout;
+      }
+    },
     mounted:function () {
-      if(this.hasError){
+      if(this.errorObj.has){
         return;
       }
-      this.metaEntity.getUISettings().then((settings)=>{
-        var gridSetting=(settings && settings.list)||{};
-        this.grid=this.metaEntity.extendUISettings(this.grid,gridSetting);
+      this.metaEntity.getPage("list").then((st)=>{
+        if(st==null){
+          this.errorObj.has=true;
+          this.errorObj.message=`[${this.metaEntity.title}]列表，已被禁止访问，请通过配置启用该页面后，再重试！`;
+          return;
+        }
+        this.grid=this.metaEntity.extendUISettings(this.grid,st);
+        if(this.grid && this.grid.title){
+          this.header.title=this.grid.title;
+        }
         this.isReady=true;
       });
+    },
+    methods:{
+      isGrid(){
+        return this.grid.ctype=="m-grid" || this.grid.ctype=="m-tree-grid";
+      }
     }
   };
 </script>

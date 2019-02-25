@@ -54,6 +54,7 @@ function initRouter(){
       next();
     }
   });
+  context.getMvueToolkit().moduleManager.addRouterInterceptor(router,{appCtx:context});
   router.afterEach(function (transition) {
     // console.log('-----------------Router Start');
     // console.log(transition);
@@ -79,6 +80,7 @@ function doStart(){
   });
   context.setCurrentVue(vueApp);
   context.getMvueToolkit().moduleManager.initAfterAppStarted(context);
+  let c=Vue.options.components;
 }
 //对外暴露的Vue应用启动函数：先获取应用配置，然后初始化模块，加载元数据信息，最终启动应用
 function startApp() {

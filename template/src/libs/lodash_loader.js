@@ -48,6 +48,8 @@ import isNumber     from 'lodash/isNumber'
 import defaultTo     from 'lodash/defaultTo'
 import split     from 'lodash/split'
 import kebabCase     from 'lodash/kebabCase'
+import template     from 'lodash/template'
+import replace from 'lodash/replace'
 
 let _lodash={
   clone,  cloneDeep,  endsWith,  debounce,  throttle,  find,
@@ -55,7 +57,7 @@ let _lodash={
   each,  isFunction,  forEach,  isNull,  isString,  toSafeInteger,  isUndefined,
   extend,  has,  toNumber,  isInteger,isNil,isFinite,isArray,uniqueId,assign,assignIn,
   isEqual,now,forIn,join,union,omit,keyBy,snakeCase,isNaN,trim,isPlainObject,
-  filter,isNumber,defaultTo,split,kebabCase
+  filter,isNumber,defaultTo,split,kebabCase,template,replace
 };
 
 window._=_lodash;

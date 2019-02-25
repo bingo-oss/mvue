@@ -1,0 +1,12 @@
+{
+  "apiBaseUrl": "http://10.200.20.96:31088/api",
+  "oauth2.clientId": "client1",
+  "oauth2.flow": "implicit",
+  "oauth2.serverUrl": "http://10.200.20.96:31089",
+  "oauth2.serverVersion": "v3",
+  "service.base.endpoint": "",
+  "service.ufs.endpoint": "api/$sfs",
+  "settings.app.index": "#/entities/Tenant/list",
+  "settings.app.title": "控制台",
+  "service.menu.endpoint": "http://10.200.20.96:31088/api"
+}
