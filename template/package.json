@@ -1,8 +1,8 @@
 {
-  "name": "{{name}}",
+  "name": "mvue",
   "version": "2.0.0",
   "description": "mvue模板工程",
-  "author": "{{author}}",
+  "author": "bingosoft",
   "private": true,
   "scripts": {
     "dev": "node build/dev-server.js",
