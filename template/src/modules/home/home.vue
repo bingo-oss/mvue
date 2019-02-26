@@ -4,16 +4,8 @@
 <template>
   <div class="layout" v-bind:class="{'layout-header-hide': hide('top') , 'layout-hide-menu' :hide('left') }">
     <m-header v-if="!hide('top')" :title="title" :logo="logo">
-      <template slot="right">
-        <ul class="topbar-menu">
-          <li>
-            <Tooltip content="首页" placement="bottom">
-              <router-link :to="{name:'default'}">
-                <Button type="text" icon="ios-home" ></Button>
-              </router-link>
-            </Tooltip>
-          </li>
-        </ul>
+      <template slot="left">
+        <m-product-list :resource="productResouce"></m-product-list>
       </template>
     </m-header>
     <Layout :class="'ivu-layout-has-sider'" class="layout-content">
@@ -35,7 +27,7 @@
   </div>
 </template>
 <script>
-  import { menuService } from "mvue-components";
+  import { menuService,productService } from "mvue-components";
   import  mvueCore from 'mvue-toolkit';
   export default {
     data: function () {
@@ -43,6 +35,7 @@
         menu: {
           menus: []
         },
+        productResouce:productService(),
         errorRouter:{
           name:"error403",
           query:null
@@ -61,21 +54,36 @@
       if (!_.isEmpty(mvueCore.config.getConfigVal("settings.app.logo"))) {
         self.logo = mvueCore.config.getConfigVal("settings.app.logo");
       }
-      if (mvueCore.config.getConfigVal("settings.menu.remote")) {
-        menuService().published({orderby: "displayOrder asc"},{onError:function (error) {
-            return self.onDeny(error);
-          }}).then(function ({data}) {
-          self.prepareMenu(data);
-          self.autoIndexPage();
-        });
-      } else {
-        menuService().local({orderby: "displayOrder asc"}).then(function ({data}) {
-          self.prepareMenu(data);
-          self.autoIndexPage();
-        });
+    },
+    computed:{
+      flatNavUrls(){
+        let _menus={}; 
+        if(this.menu&&this.menu.menus){
+          this.mapAll(_menus,this.menu.menus);
+        }
+        return _menus;
       }
     },
     methods: {
+      mapAll(_menus,originMenus){
+        _.each(originMenus,m=>{
+          m.url?_menus[m.url]=true:'';
+          if(m.children){
+            this.mapAll(_menus,m.children);
+          }
+        })
+      },
+      loadMenu(){
+        let self=this;
+        return new Promise((resolve,reject)=>{
+          menuService().published({orderby: "displayOrder asc"},{onError:function (error) {
+              return self.onDeny(error);
+            }}).then(function ({data}) {
+            self.prepareMenu(data);
+            resolve();
+          });
+        });
+      },
       hide(type) {
         var types = this.$route.query._hide;
         if (!types) {
@@ -150,7 +158,27 @@
           return true;
         }
         return false;
+      },
+      clearTopEntityRow(to){
+        let menus=this.menu.menus;
+        let toPath = to.path;
+        let urls=this.flatNavUrls;
+        if(urls[`#${toPath}`]){
+          this.$store.commit('core/setTopEntityRow','');
+        }
       }
+    },
+    beforeRouteEnter (to, from, next) {
+      next(vm=>{
+        vm.loadMenu().then(()=>{
+            vm.clearTopEntityRow(to);
+            vm.autoIndexPage();
+        });
+      });
+    },
+    beforeRouteUpdate (to, from, next) {
+      this.clearTopEntityRow(to);
+      next();
     }
   }
 </script>

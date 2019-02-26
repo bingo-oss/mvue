@@ -46,7 +46,7 @@ routersData[0].children.push({
   },
   name: "defaultCreateForm",
   component: require('src/templates/form'),
-  path: "entities/:entityName/create",
+  path: "entities/:entityName/:action",
   beforeEnter: function (to, from, next) {
     propsResolve(to);
     next();
@@ -58,7 +58,39 @@ routersData[0].children.push({
   },
   name: "defaultEditForm",
   component: require('src/templates/form'),
-  path: "entities/:entityName/edit/:id",
+  path: "entities/:entityName/:id/:action",
+  children:[
+    {
+      name: "defaultSubPage",
+      path:":subPage",
+      component:require("src/templates/sub-page"),
+    },
+    {
+      name: "defaultSubCreatePage",
+      path:":relation/:subPage",
+      component:require("src/templates/sub-page-relation.vue"),
+    },
+    {
+      name: "defaultSubRelationPage",
+      path:":relation/:subId/:subPage",
+      component:require("src/templates/sub-page-relation.vue"),
+      children:[
+        {
+          name: "defaultThirdPage",
+          path:":thirdPage",
+          component:require("src/templates/third-page"),
+        },
+        {
+          name: "defaultThirdRelationPage",
+          path:":relation2/:id3?/:thirdPage",
+          component:require("src/templates/third-page-relation.vue"),
+          children:[
+
+          ]
+        }
+      ]
+    }
+  ],
   beforeEnter: function (to, from, next) {
     propsResolve(to);
     next();
