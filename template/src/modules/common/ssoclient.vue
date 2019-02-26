@@ -17,8 +17,8 @@
                 mvueCore.session.doLogout(window.location.protocol + window.location.host + window.location.pathname);
                 return;
             }
-            mvueCore.ssoclient.onSSOCallback(function (tokenInfo) {
-                mvueCore.session.doSignIn(tokenInfo);
+            mvueCore.ssoclient.onSSOCallback(async (tokenInfo)=> {
+                await mvueCore.session.doSignIn(tokenInfo);
                 var returnTo = _self.$route.query["returnUrl"];
                 if (_.startsWith(returnTo, "http")) {
                     window.location = returnTo;
