@@ -59,6 +59,7 @@
     },
     computed:{
       layout() {
+        var self=this;
         var pageSettings = mvueCore.metaLayoutConvertor.convert(this.grid, self);
         var layout=pageSettings.layout;
         return layout;

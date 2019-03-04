@@ -37,7 +37,7 @@ import asyncIs from './async-is';
 function initRouter(){
   var routesData = require('../router/index').default;
   var router = new VueRouter({
-    routes: routesData
+    routes: routesData.initRouters()
   });
   //将路由对象设置到全局上下文中
   context.setRouter(router);
@@ -80,7 +80,6 @@ function doStart(){
   });
   context.setCurrentVue(vueApp);
   context.getMvueToolkit().moduleManager.initAfterAppStarted(context);
-  let c=Vue.options.components;
 }
 //对外暴露的Vue应用启动函数：先获取应用配置，然后初始化模块，加载元数据信息，最终启动应用
 function startApp() {

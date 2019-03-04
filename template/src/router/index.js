@@ -97,4 +97,41 @@ routersData[0].children.push({
   }
 });
 
-export default routersData;
+//动态pages页面
+var dyncPage=require('src/templates/dync-page');
+
+export default {
+  initRouters() {
+    let data = routersData;
+    let remoteRoutes = mvueToolkit.router.initRemoteRoutes(dyncPage);
+    if (remoteRoutes) {
+      _.forEach(remoteRoutes,route=>{
+        data[0].children.push(route);
+      });
+    }
+    data[0].children.push({
+      name: "dynamicPage1",
+      component: dyncPage,
+      path: "pages/:page1",
+      children: [
+        {
+          name: "dynamicPage2",
+          component: require('src/templates/dync-page'),
+          path: ":page2",
+          children: [
+            {
+              name: "dynamicPage3",
+              component: require('src/templates/dync-page'),
+              path: ":page3",
+            }
+          ]
+        }
+      ],
+      beforeEnter: function (to, from, next) {
+        propsResolve(to);
+        next();
+      }
+    });
+    return data;
+  }
+}
