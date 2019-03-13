@@ -20,11 +20,17 @@ mods.forEach(mod => {
 });
 //每一个页面由于在引用组件无法使用当前应用的模板，所以如果未定义component，附加上去
 var pageIndex=require('src/templates/index');
-_routes.forEach(route=>{
-  if(!route.component){
-    route.component=pageIndex;
-  }
-});
+function setComponent(__routes){
+  __routes.forEach(route=>{ 
+      if(!route.component){
+        route.component=pageIndex;  
+      } 
+      if(!_.isEmpty(route.children)){ 
+        setComponent(route.children);  
+      }
+  }); 
+} 
+setComponent(_routes);
 let _autoRoutes=_routes.concat(autoRoutes,asyncRoutes);
 //将自动生成的路由附加到根路由上
 routersData[0].children=routersData[0].children.concat(_autoRoutes);
