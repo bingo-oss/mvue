@@ -213,5 +213,13 @@ export default {
         resolve(modsMenus);
       },()=>{reject();});
     });
+  },
+  buildResource: function (url, actions, _options) {
+    const mvueToolkit = this.getMvueToolkit();
+    if (mvueToolkit == null) {
+      return null;
+    }
+    return mvueToolkit.resource(url, actions, _options);
+
   }
 }
