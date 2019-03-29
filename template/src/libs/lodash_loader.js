@@ -49,6 +49,7 @@ import defaultTo     from 'lodash/defaultTo'
 import split     from 'lodash/split'
 import kebabCase     from 'lodash/kebabCase'
 import template     from 'lodash/template'
+import templateSettings     from 'lodash/templateSettings'
 import replace from 'lodash/replace'
 import camelCase from 'lodash/camelCase'
 
