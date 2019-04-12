@@ -34,78 +34,94 @@ setComponent(_routes);
 let _autoRoutes=_routes.concat(autoRoutes,asyncRoutes);
 //将自动生成的路由附加到根路由上
 routersData[0].children=routersData[0].children.concat(_autoRoutes);
-routersData[0].children.push({
-  meta: {
-    requireAuth: true
-  },
-  name: "defaultEntityList",
-  component: require('src/templates/list'),
-  path: "entities/:entityName/list",
-  beforeEnter: function (to, from, next) {
-    propsResolve(to);
-    next();
-  }
-});
-routersData[0].children.push({
-  meta: {
-    requireAuth: true
-  },
-  name: "defaultCreateForm",
-  component: require('src/templates/form'),
-  path: "entities/:entityName/:action",
-  beforeEnter: function (to, from, next) {
-    propsResolve(to);
-    next();
-  }
-});
-routersData[0].children.push({
-  meta: {
-    requireAuth: true
-  },
-  name: "defaultEditForm",
-  component: require('src/templates/form'),
-  path: "entities/:entityName/:id/:action",
-  children:[
-    {
-      name: "defaultSubPage",
-      path:":subPage",
-      component:require("src/templates/sub-page"),
-    },
-    {
-      name: "defaultSubCreatePage",
-      path:":relation/:subPage",
-      component:require("src/templates/sub-page-relation.vue"),
-    },
-    {
-      name: "defaultSubRelationPage",
-      path:":relation/:subId/:subPage",
-      component:require("src/templates/sub-page-relation.vue"),
-      children:[
-        {
-          name: "defaultThirdPage",
-          path:":thirdPage",
-          component:require("src/templates/third-page"),
-        },
-        {
-          name: "defaultThirdRelationPage",
-          path:":relation2/:id3?/:thirdPage",
-          component:require("src/templates/third-page-relation.vue"),
-          children:[
 
-          ]
-        }
-      ]
+let metaUIRouters=[
+  {
+    meta: {
+      requireAuth: true
+    },
+    name: "defaultEntityList",
+    component: require('src/templates/list'),
+    path: "entities/:entityName/list",
+    beforeEnter: function (to, from, next) {
+      propsResolve(to);
+      next();
     }
-  ],
-  beforeEnter: function (to, from, next) {
-    propsResolve(to);
-    next();
+  },
+  {
+    meta: {
+      requireAuth: true
+    },
+    name: "defaultCreateForm",
+    component: require('src/templates/form'),
+    path: "entities/:entityName/:action",
+    beforeEnter: function (to, from, next) {
+      propsResolve(to);
+      next();
+    }
+  },
+  {
+    meta: {
+      requireAuth: true
+    },
+    name: "defaultEditForm",
+    component: require('src/templates/form'),
+    path: "entities/:entityName/:id/:action",
+    children:[
+      {
+        name: "defaultSubPage",
+        path:":subPage",
+        component:require("src/templates/sub-page"),
+      },
+      {
+        name: "defaultSubCreatePage",
+        path:":relation/:subPage",
+        component:require("src/templates/sub-page-relation.vue"),
+      },
+      {
+        name: "defaultSubRelationPage",
+        path:":relation/:subId/:subPage",
+        component:require("src/templates/sub-page-relation.vue"),
+        children:[
+          {
+            name: "defaultThirdPage",
+            path:":thirdPage",
+            component:require("src/templates/third-page"),
+          },
+          {
+            name: "defaultThirdRelationPage",
+            path:":relation2/:id3?/:thirdPage",
+            component:require("src/templates/third-page-relation.vue"),
+            children:[
+
+            ]
+          }
+        ]
+      }
+    ],
+    beforeEnter: function (to, from, next) {
+      propsResolve(to);
+      next();
+    }
   }
+];
+
+_.forEach(metaUIRouters,router=>{
+  routersData[0].children.push(router);
 });
+
+function appendMetaUIRoute(parentRoute) {
+  let cloned=_.cloneDeep(metaUIRouters);
+  mvueToolkit.utils.visitTree(cloned,router=>{
+    router.name=`${parentRoute.name}-${router.name}`;
+  });
+  _.forEach(cloned,router=>{
+    parentRoute.children.push(router);
+  });
+}
 
 //动态pages页面
 var dyncPage=require('src/templates/dync-page');
-
 export default {
   initRouters() {
     let data = routersData;
@@ -113,8 +129,14 @@ export default {
     if (remoteRoutes) {
       _.forEach(remoteRoutes,route=>{
         data[0].children.push(route);
+        mvueToolkit.utils.visitTree(route,(item,parent,indexOrKey)=>{
+          if(item.name.indexOf("&entities")>-1){
+            appendMetaUIRoute(parent);
+          }
+        });
       });
     }
+
     data[0].children.push({
       name: "dynamicPage1",
       component: dyncPage,

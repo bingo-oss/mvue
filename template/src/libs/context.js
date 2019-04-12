@@ -50,6 +50,9 @@ export default {
   setIframeId: function (iframeId) {
     cachedContext.iframeId = iframeId;
   },
+  inIframe(){
+    return !!cachedContext.iframeId;
+  },
   postMessageToParent: function (data, targetOrigin) {
     var eventData = _.assign(data, {
       iframeId: cachedContext.iframeId

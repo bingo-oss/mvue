@@ -59,7 +59,7 @@ let _lodash={
   each,  isFunction,  forEach,  isNull,  isString,  toSafeInteger,  isUndefined,
   extend,  has,  toNumber,  isInteger,isNil,isFinite,isArray,uniqueId,assign,assignIn,
   isEqual,now,forIn,join,union,omit,keyBy,snakeCase,isNaN,trim,isPlainObject,
-  filter,isNumber,defaultTo,split,kebabCase,template,replace,camelCase
+  filter,isNumber,defaultTo,split,kebabCase,template,replace,camelCase,templateSettings
 };
 
 window._=_lodash;

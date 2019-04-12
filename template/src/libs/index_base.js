@@ -43,6 +43,9 @@ function initRouter(){
   context.setRouter(router);
   var session=context.getMvueToolkit().session;
   router.beforeEach(function(to, from, next) {
+    if(context.inIframe()){
+      to.query._hide="left,top";
+    }
     session.doFilter(to,from,next);
   });
   //拦截异步模块请求
