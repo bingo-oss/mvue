@@ -4,9 +4,6 @@
 <template>
   <div class="layout" v-bind:class="{'layout-header-hide': hide('top') , 'layout-hide-menu' :hide('left') }">
     <m-header v-if="!hide('top')" :title="title" :logo="logo">
-      <template slot="left">
-        <m-product-list :resource="productResouce"></m-product-list>
-      </template>
     </m-header>
     <Layout :class="'ivu-layout-has-sider'" class="layout-content">
       <m-menu v-if="!hide('left') && menuLoaded" v-bind="menu" ref="navMenuRef" @on-menu-selected="handleOnMenuSelected"></m-menu>
