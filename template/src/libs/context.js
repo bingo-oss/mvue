@@ -1,4 +1,3 @@
-
 import asyncImportAll from '../ai/ref-mods/async/import-all';
 
 var cachedContext={
@@ -50,6 +49,9 @@ export default {
   },
   setIframeId: function (iframeId) {
     cachedContext.iframeId = iframeId;
+  },
+  inIframe(){
+    return !!cachedContext.iframeId;
   },
   postMessageToParent: function (data, targetOrigin) {
     var eventData = _.assign(data, {
@@ -214,5 +216,13 @@ export default {
         resolve(modsMenus);
       },()=>{reject();});
     });
+  },
+  buildResource: function (url, actions, _options) {
+    const mvueToolkit = this.getMvueToolkit();
+    if (mvueToolkit == null) {
+      return null;
+    }
+    return mvueToolkit.resource(url, actions, _options);
+
   }
 }
