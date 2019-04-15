@@ -78,7 +78,15 @@ function doStart(){
     template: '<App/>',
     components: {App},
     created: function () {
-      context.setIframeId(this.$route.query['_iframeId']);
+      let qmark=window.location.href.lastIndexOf('?'),params={};
+      if(qmark>0){
+        params=qs.parse(window.location.href.substr(qmark+1));
+        if(this.$route.name=='ssoclient'&&params.returnUrl){
+          qmark=params.returnUrl.lastIndexOf('?');
+          params=qs.parse(params.returnUrl.substr(qmark+1));
+        }
+      }
+      context.setIframeId(this.$route.query['_iframeId']||params['_iframeId']);
     }
   });
   context.setCurrentVue(vueApp);
