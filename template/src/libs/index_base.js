@@ -33,6 +33,8 @@ import newStore from '../store';
 
 import asyncIs from './async-is';
 
+var qs=require("qs");
+
 //初始化路由数据，并初始化请求拦截器(登录校验)
 function initRouter(){
   var routesData = require('../router/index').default;
