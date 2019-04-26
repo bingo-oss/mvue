@@ -20,8 +20,14 @@ function buildConf(autoConfs,routes,parentPath){
             }
             autoConfs[key]=`##require_placeholder_begin##('${ele.meta.file}')##require_placeholder_end##`;
         }
-        if(ele.children){
-            buildConf(autoConfs,ele.children,ele.path);
+        if(ele.children){ 
+            let pPath;  
+            if (!parentPath) {
+                pPath = ele.path;  
+            } else {
+                pPath = parentPath + '/' + ele.path;  
+            } 
+            buildConf(autoConfs,ele.children, pPath); 
         }
     }
 }
