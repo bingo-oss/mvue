@@ -217,6 +217,20 @@ export default {
       },()=>{reject();});
     });
   },
+  getConfig(){
+      const mvueToolkit = this.getMvueToolkit();
+      if (mvueToolkit == null) {
+        return {};
+      }
+      return mvueToolkit.config;
+  },
+  getConfigVal(key){
+      const mvueToolkit = this.getMvueToolkit();
+      if (mvueToolkit == null) {
+        return null;
+      }
+      return mvueToolkit.config.getConfigVal(key);
+  },
   buildResource: function (url, actions, _options) {
     const mvueToolkit = this.getMvueToolkit();
     if (mvueToolkit == null) {
