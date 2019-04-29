@@ -29,10 +29,24 @@ module.exports = {
       "required": true,
       "message": "运行端口",
       "default": 9596
+    },
+    lint: {
+      type: 'confirm',
+      message: '是否开启ESLint(默认不开启)?',
+      default:false
+    },
+    desktop: {
+      type: 'confirm',
+      message: '是否桌面应用(默认是普通web应用)?',
+      default:false
     }
   },
   "filters": {
-    
+    '.eslintrc.js': 'lint',
+    '.eslintignore': 'lint',
+    '.vscode/*': 'lint',
+    'nginx/*': '! desktop',
+    'Dockerfile': '! desktop'
   },
   "completeMessage": "开始运行你的项目:\n\n  {{^inPlace}}cd {{destDirName}}\n  {{/inPlace}}npm install\n  npm run dev\n\n"
 };

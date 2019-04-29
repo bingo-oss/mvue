@@ -1,4 +1,3 @@
-var glob = require('glob')
 const fs = require('fs')
 var path = require('path')
 var refmods = require('./refmods');

@@ -1,6 +1,6 @@
-# api-console
+# {{name}}
 
-> api-console for vue2
+> {{name}} for vue2
 
 ## Build Setup
 

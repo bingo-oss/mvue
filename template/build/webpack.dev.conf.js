@@ -6,8 +6,6 @@ var baseWebpackConfig = require('./webpack.base.conf') // 加载 webpack.base.co
 var FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 
 
-var path = require('path')
-var CopyWebpackPlugin = require('copy-webpack-plugin')
 
 // add hot-reload related code to entry chunks
 Object.keys(baseWebpackConfig.entry).forEach(function (name) {
