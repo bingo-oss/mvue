@@ -3,7 +3,6 @@ var utils = require('./utils')
 var config = require('../config')
 var vueLoaderConfig = require('./vue-loader.conf')
 var webpack = require('webpack')
-var parseArgs  = require('minimist')
 
 var CopyWebpackPlugin = require('copy-webpack-plugin')
 

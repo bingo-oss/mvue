@@ -1,7 +1,6 @@
 var glob = require('glob');
 const fs = require('fs')
 var path = require('path')
-var chokidar = require('chokidar');
 var modsDef = require('../config/mods-def');
 const aiBasePath = path.join(__dirname,'../src/ai');
 const basePath = path.join(aiBasePath,`ref-mods`)
@@ -51,7 +50,7 @@ function writeAsyncMod(asyncMods){
     <div></div>
 </template>
 <script>
-import homeBase from '${importPrefix}router/home-base'; 
+import homeBase from '${importPrefix}router/home-base';
 import appCtx from '${importPrefix}libs/context';
 import pageIndex from '${importPrefix}templates/index';
 export default {
@@ -107,7 +106,7 @@ export default refmodsRoutes;
         },()=>{reject();});
     });`
     }
-    var importAllContent=`import homeBase from '${importPrefix}router/home-base'; 
+    var importAllContent=`import homeBase from '${importPrefix}router/home-base';
 import appCtx from '${importPrefix}libs/context';
 import pageIndex from '${importPrefix}templates/index';
 function load(){
