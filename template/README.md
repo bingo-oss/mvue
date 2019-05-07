@@ -1,6 +1,6 @@
-# {{name}}
+# web
 
-> {{name}} for vue2
+> web for vue2
 
 ## Build Setup
 
