@@ -27,6 +27,9 @@ context.setMvueToolkit(mvueToolkit);
 import mvueComponents from 'mvue-components';
 mvueToolkit.moduleManager.add(mvueComponents);
 import mvueCore from 'mvue-core';
+import settings from './settings';
+//重写用户部门相关的配置
+mvueCore.context.setSettings(settings);
 mvueToolkit.moduleManager.add(mvueCore);
 
 import newStore from '../store';
@@ -103,7 +106,8 @@ function startApp() {
     ]).then(function ([iview]) {
       Vue.use(iview);
       Vue.use(mvueToolkit,{
-        baseUrlForResource:mvueToolkit.config.getApiBaseUrl()
+        baseUrlForResource:mvueToolkit.config.getApiBaseUrl(),
+        appSettings:settings
       });
 
       var globalComponentsInit=require('./global_components').default;
