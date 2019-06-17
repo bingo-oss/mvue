@@ -22,7 +22,13 @@ function buildConf(pagesPath,autoConfs,routes,parentPath){
             autoConfs[key]=`##require_placeholder_begin##('${confValue}')##require_placeholder_end##`;
         }
         if(ele.children){
-            buildConf(pagesPath,autoConfs,ele.children,ele.path);
+            let pPath;
+            if (!parentPath) {
+                pPath = ele.path;
+            } else {
+                pPath = parentPath + '/' + ele.path;
+            }
+            buildConf(pagesPath,autoConfs,ele.children, pPath);
         }
     }
 }
