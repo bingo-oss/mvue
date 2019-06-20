@@ -1,6 +1,6 @@
-# web
+# api-console
 
-> web for vue2
+> api-console for vue2
 
 ## Build Setup
 

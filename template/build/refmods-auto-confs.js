@@ -30,6 +30,7 @@ function buildConf(pagesPath,autoConfs,routes,parentPath){
             }
             buildConf(pagesPath,autoConfs,ele.children, pPath);
         }
+
     }
 }
 function run(refModsRoutes){
