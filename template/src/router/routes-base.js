@@ -25,6 +25,11 @@ var routers = [
     name: "ssoclient",
     component: "common/ssoclient.vue",
     path: "/ssoclient"
+  },
+  {
+    name: "link-login",
+    component: "common/link-login.vue",
+    path: "/link-login"
   }
 ];
 export default routers;

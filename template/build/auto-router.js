@@ -80,7 +80,11 @@ function run(devMode){
     //console.log(JSON.stringify(routes));
     writeJs(JSON.stringify(routes,(key,value)=>{
         if(key=="component"){
+          if(value==pageTmplDir){
+            return `##require_placeholder_assign_begin##('${value}')##require_placeholder_assign_end##`;
+          }else{
             return `##require_placeholder_begin##('${value}')##require_placeholder_end##`;
+          }
         }else{
             return value;
         }
@@ -93,7 +97,10 @@ function run(devMode){
     sleep(2000);
 }
 function writeJs(routes){
-    routes=routes.replace(/\"##require_placeholder_begin##/g,'require').replace(/##require_placeholder_end##\"/g,'');
+    routes= routes.replace(/\"##require_placeholder_assign_begin##/g,'_.assign({},require')
+                  .replace(/##require_placeholder_assign_end##\"/g,')')
+                  .replace(/\"##require_placeholder_begin##/g,'require')
+                  .replace(/##require_placeholder_end##\"/g,'');
     var jsContent=`var autoRoutes=${routes}
 export default autoRoutes`;
     var outputFile=path.join(aiBasePath,'auto-routes.js')

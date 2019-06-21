@@ -8,7 +8,10 @@ const settings={
     // },
     refEntity:{
       hideDeleted:false
-    }
+    }//,
+    // dateTime:{
+    //   gridFormatter:'simple'//日期时间在grid显示时使用的格式化字符串，支持simple和标准格式化串，如：YYYY-MM-DD HH:mm:ss
+    // }
   },
   http:{
     // onError:function(error){
@@ -19,6 +22,7 @@ const settings={
     //   return false;
     // },
     showLoading:true
-  }
+  },
+  sidExpired:2//修改为两天，也可以修改小数20秒：1000*20/(24*60*60*1000)
 };
 export default settings;
