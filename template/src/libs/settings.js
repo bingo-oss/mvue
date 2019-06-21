@@ -23,6 +23,6 @@ const settings={
     // },
     showLoading:true
   },
-  sidExpired:1000*20/(24*60*60*1000)//20秒
+  sidExpired:2//修改为两天，也可以修改小数20秒：1000*20/(24*60*60*1000)
 };
 export default settings;
