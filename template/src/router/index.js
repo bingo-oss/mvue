@@ -35,6 +35,7 @@ let _autoRoutes=_routes.concat(autoRoutes,asyncRoutes);
 //将自动生成的路由附加到根路由上
 routersData[0].children=routersData[0].children.concat(_autoRoutes);
 let formIndex=require('src/templates/form');
+let subPageRelation=require('src/templates/sub-page-relation');
 let metaUIRouters=[
   {
     meta: {
@@ -76,12 +77,12 @@ let metaUIRouters=[
       {
         name: "defaultSubCreatePage",
         path:":relation/:subPage",
-        component:require("src/templates/sub-page-relation.vue"),
+        component:_.assign({},subPageRelation)
       },
       {
         name: "defaultSubRelationPage",
         path:":relation/:subId/:subPage",
-        component:require("src/templates/sub-page-relation.vue"),
+        component:_.assign({},subPageRelation),
         children:[
           {
             name: "defaultThirdPage",
