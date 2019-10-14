@@ -97,7 +97,11 @@ function run(devMode){
                     return undefined;
                 }
             }else if(key=='meta'){
+              if(value&&value.type){
+                return {type:value.type};
+              }else{
                 return undefined;
+              }
             }else{
                 return value;
             }
