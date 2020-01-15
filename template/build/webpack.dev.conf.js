@@ -1,32 +1,37 @@
 var utils = require('./utils')  // 引入一些小工具
 var webpack = require('webpack')
+const path = require('path')
 var config = require('../config')
 var merge = require('webpack-merge')  //配置合并插
 var baseWebpackConfig = require('./webpack.base.conf') // 加载 webpack.base.conf
-var FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
-
-
-
-// add hot-reload related code to entry chunks
-Object.keys(baseWebpackConfig.entry).forEach(function (name) {
-  baseWebpackConfig.entry[name] = ['./build/dev-client'].concat(baseWebpackConfig.entry[name])
-})
 
 module.exports = merge(baseWebpackConfig, {
+  mode:'development',
   module: {
     rules: utils.styleLoaders({ sourceMap: !config.dev.cssSourceMap })
   },
-  // cheap-module-eval-source-map is faster for development
-  devtool: '#eval-source-map', //#cheap-module-eval-source-map  eval-source-map
-  plugins: [
-    new webpack.DefinePlugin({
-      'process.env': config.dev.env
-    }),
-    // https://github.com/glenjamin/webpack-hot-middleware#installation--usage
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoEmitOnErrorsPlugin(),
-    new FriendlyErrorsPlugin(),
-
-
-  ]
+  devServer: {
+    clientLogLevel: 'warning',
+    historyApiFallback: {
+      rewrites: [
+        { from: /.*/, to: path.posix.join(config.dev.assetsPublicPath, 'index.html') },
+      ],
+    },
+    hot: true,
+    contentBase: false, // since we use CopyWebpackPlugin.
+    compress: true,
+    host: config.dev.host,
+    port: config.dev.port,
+    open: config.dev.autoOpenBrowser,
+    overlay: config.dev.errorOverlay
+      ? { warnings: false, errors: true }
+      : false,
+    publicPath: config.dev.assetsPublicPath,
+    proxy: config.dev.proxyTable,
+    quiet: false,
+    watchOptions: {
+      poll: config.dev.poll,
+    }
+  },
+  devtool: config.dev.devtool
 })

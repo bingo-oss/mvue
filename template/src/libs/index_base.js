@@ -75,7 +75,7 @@ function initRouter(){
 //Vue应用启动
 function doStart(){
   initRouter();
-  var App = require('../app.vue');
+  var App = require('../app.vue').default;
   var vueApp=new Vue({
     el: '#app',
     router: context.getRouter(),

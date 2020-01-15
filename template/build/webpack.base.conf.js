@@ -7,23 +7,76 @@ var webpack = require('webpack')
 var CopyWebpackPlugin = require('copy-webpack-plugin')
 
 var HtmlWebpackPlugin = require('html-webpack-plugin')
-var LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
+
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
+
+const fs = require('fs')
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
 //用来屏蔽某些vue模板解析，方便开发迁移调试
 var _excludes=[];
+var copyOpts=[
+  {
+    from: path.resolve(__dirname, '../static/config'),
+    to: 'config',
+    ignore: ['.*']
+  },
+  {
+    from: path.resolve(__dirname, '../static/images'),
+    to: 'static/images',
+    ignore: ['.*']
+  }
+];
+let distRemotesPath=path.resolve(__dirname, '../dist/remotes');
+let remotesPath=path.resolve(__dirname, '../src/remotes');
+//检测src/remotes目录是否存在，存在的话开启复制远程组件功能
+let remotesPathExists=fs.existsSync(remotesPath);
+if(remotesPathExists){
+  //然后检测是否有remotes目录编译的远程组件，如果没有先创建它，避免CopyWebpackPlugin组件报错
+  let distRemotesPathExists=fs.existsSync(distRemotesPath);
+  if(!distRemotesPathExists){
+    fs.mkdirSync(distRemotesPath,{recursive:true});
+  }
+  copyOpts.push({
+    from: distRemotesPath,
+    to: 'static/remotes',
+    ignore: ['.*']
+  });
+}
 var webpackConfig={
   //入口文件
   entry: {main:'./src/main.js'},
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',
-    chunkFilename: '[name].[id].js',
+    chunkFilename: '[name].js',
     publicPath: process.env.NODE_ENV === 'production'
       ? config.build.assetsPublicPath
       : config.dev.assetsPublicPath
+  },
+  optimization: {
+    splitChunks: {
+      chunks: 'async',
+      minSize: 30000,
+      maxAsyncRequests: 5,
+      maxInitialRequests: 3,
+      name: true,
+      cacheGroups: {
+        iview: {
+          name: "iview",
+          priority: 20,
+          test: /[\\/]node_modules[\\/]iview[\\/]/
+        },
+        vendor: {
+          name: "vendors",
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10,
+          chunks: "initial"
+        }
+      },
+    }
   },
   resolve: {
     extensions: ['.js', '.vue', '.json', '.scss', '.css','.less'],
@@ -76,7 +129,7 @@ var webpackConfig={
     ]
   },
   plugins: [
-    new LodashModuleReplacementPlugin,
+    new VueLoaderPlugin(),
     //webpack在require动态路径时会加载整个目录的文件作为模块，这个插件可以限定要引入的模块
     new webpack.ContextReplacementPlugin(
       /codemirror[\/\\]mode$/,
@@ -86,37 +139,7 @@ var webpackConfig={
       /codemirror[\/\\]theme$/,
       /eclipse/
     ),
-    // split vendor js into its own file
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
-      minChunks: function (module, count) {
-        // any required modules inside node_modules are extracted to vendor
-        return (
-          module.resource &&
-          /\.js$/.test(module.resource) &&
-          module.resource.indexOf(
-            path.join(__dirname, '../node_modules')
-          ) === 0
-        )
-      }
-    }),
-    // extract webpack runtime and module manifest to its own file in order to
-    // prevent vendor hash from being updated whenever app bundle is updated
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'manifest'
-    }),
-    new CopyWebpackPlugin([
-      {
-        from: path.resolve(__dirname, '../static/config'),
-        to: 'config',
-        ignore: ['.*']
-      },
-      {
-        from: path.resolve(__dirname, '../static/images'),
-        to: 'static/images',
-        ignore: ['.*']
-      }
-    ])
+    new CopyWebpackPlugin(copyOpts)
   ]
 }
 if (config.build.bundleAnalyzerReport) {

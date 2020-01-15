@@ -4,6 +4,6 @@ export default {
   },
   name: "default",
   path: "/",
-  component: require("../modules/home/home"),
+  component: require("../modules/home/home").default,
   children: []
 }

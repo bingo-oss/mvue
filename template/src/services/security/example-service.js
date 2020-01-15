@@ -1,3 +1,4 @@
+//下面是一个service的简单示例定义，项目不会使用这个service
 import  mvueCore from "mvue-toolkit";
 
 var $resource=null;
@@ -9,8 +10,6 @@ export  default function () {
   if($resource!=null){
     return $resource;
   };
-  /*var root=`${mvueCore.config.getGatewayUrl()}/approle`;
-  $resource=mvueCore.resource('uasRole{/id}',customActions,{root:root});*/
   $resource=mvueCore.resource('role{/id}',customActions);
   return $resource;
 };
