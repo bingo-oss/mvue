@@ -2,7 +2,7 @@ var path = require('path')
 // glob模块，用于读取webpack入口目录文件
 var glob = require('glob');
 var config = require('../config')
-var ExtractTextPlugin = require('extract-text-webpack-plugin')
+var MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 exports.assetsPath = function (_path) {
   var assetsSubDirectory = process.env.NODE_ENV === 'production'
@@ -11,38 +11,31 @@ exports.assetsPath = function (_path) {
   return path.posix.join(assetsSubDirectory, _path)
 }
 
+exports.assetsLibPath = function (_path) {
+  return path.posix.join(config.lib.assetsSubDirectory, _path)
+}
+
 exports.cssLoaders = function (options) {
   options = options || {}
-
-  var cssLoader = {
-    loader: 'css-loader',
-    options: {
-      minimize: process.env.NODE_ENV === 'production',
-      sourceMap: options.sourceMap
-    }
-  }
-
-  // generate loader string to be used with extract text plugin
   function generateLoaders (loader, loaderOptions) {
-    var loaders = [cssLoader]
+    let loaders = []
     if (loader) {
-      loaders.push({
-        loader: loader + '-loader',
-        options: Object.assign({}, loaderOptions, {
-          sourceMap: options.sourceMap
-        })
-      })
+        loaders = [{
+            loader: loader + '-loader',
+            options: Object.assign({}, loaderOptions, {
+                sourceMap: options.sourceMap
+            })
+        }]
     }
 
-    // Extract CSS when that option is specified
-    // (which is the case during production build)
     if (options.extract) {
-      return ExtractTextPlugin.extract({
-        use: loaders,
-        fallback: 'vue-style-loader'
-      })
+        let extractLoader = {
+            loader: MiniCssExtractPlugin.loader,
+            options: {}
+        }
+        return [extractLoader, 'css-loader'].concat(loaders)
     } else {
-      return ['vue-style-loader'].concat(loaders)
+        return ['vue-style-loader', 'css-loader'].concat(loaders)
     }
   }
 
@@ -72,7 +65,7 @@ exports.styleLoaders = function (options) {
   return output
 }
 
-exports.getEntries = function (globPath) {
+exports.getEntries = function (globPath,filterFunc,nameFunc) {
   var entries = {}
   /**
    * 读取src目录,并进行路径裁剪
@@ -87,12 +80,23 @@ exports.getEntries = function (globPath) {
       // 当然， 你也可以加上模块名称, 即输出如下： { module/main: './src/module/index/main.js', module/test: './src/module/test/test.js' }
       // 最终编译输出的文件也在module目录下， 访问路径需要时 localhost:8080/module/index.html
       // slice 从已有的数组中返回选定的元素, -3 倒序选择，即选择最后三个
-    var tmp = entry.split('/').splice(-3)
-    var moduleName = tmp.slice(1, 2);
+    let valid=true;
+    if(filterFunc) {
+      valid=filterFunc(entry);
+    }
+    if(!valid){
+      return;
+    }
+    var moduleName='';
+    if(nameFunc){
+      moduleName=nameFunc(entry);
+    }else{
+      var tmp = entry.split('/').splice(-3)
+      moduleName = tmp.slice(1, 2);
+    }
     // ***************end***************
     entries[moduleName] = entry
   });
-  // console.log(entries);
   // 获取的主入口如下： { main: './src/module/index/main.js', test: './src/module/test/test.js' }
   return entries;
 }

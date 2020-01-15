@@ -3,7 +3,7 @@ import mvueToolkit from "mvue-toolkit";
 import autoRoutes from '../ai/pages/auto-routes';
 import asyncRoutes from '../ai/ref-mods/async/routes';
 var routersData = mvueToolkit.router.toRealRoutes(routesBase,function (component) {
-  return require('src/modules/' + component);
+  return require('src/modules/' + component).default;
 });
 var propsResolve = function (router) {
   if (!_.isEmpty(router.params.menu)) {
@@ -19,7 +19,7 @@ mods.forEach(mod => {
   }
 });
 //每一个页面由于在引用组件无法使用当前应用的模板，所以如果未定义component，附加上去
-var pageIndex=require('src/templates/index');
+var pageIndex=require('src/templates/index').default;
 function setComponent(__routes){
   __routes.forEach(route=>{
     if(!route.component){
@@ -34,15 +34,15 @@ setComponent(_routes);
 let _autoRoutes=_routes.concat(autoRoutes,asyncRoutes);
 //将自动生成的路由附加到根路由上
 routersData[0].children=routersData[0].children.concat(_autoRoutes);
-let formIndex=require('src/templates/form');
-let subPageRelation=require('src/templates/sub-page-relation');
+let formIndex=require('src/templates/form').default;
+let subPageRelation=require('src/templates/sub-page-relation').default;
 let metaUIRouters=[
   {
     meta: {
       requireAuth: true
     },
     name: "defaultEntityList",
-    component: require('src/templates/list'),
+    component: require('src/templates/list').default,
     path: "entities/:entityName/list",
     beforeEnter: function (to, from, next) {
       propsResolve(to);
@@ -72,7 +72,7 @@ let metaUIRouters=[
       {
         name: "defaultSubPage",
         path:":subPage",
-        component:require("src/templates/sub-page"),
+        component:require("src/templates/sub-page").default,
       },
       {
         name: "defaultSubCreatePage",
@@ -87,12 +87,12 @@ let metaUIRouters=[
           {
             name: "defaultThirdPage",
             path:":thirdPage",
-            component:require("src/templates/third-page"),
+            component:require("src/templates/third-page").default,
           },
           {
             name: "defaultThirdRelationPage",
             path:":relation2/:id3?/:thirdPage",
-            component:require("src/templates/third-page-relation.vue"),
+            component:require("src/templates/third-page-relation.vue").default,
             children:[
 
             ]
@@ -122,7 +122,7 @@ function appendMetaUIRoute(parentRoute) {
 }
 
 //动态pages页面
-var dyncPage=require('src/templates/dync-page');
+var dyncPage=require('src/templates/dync-page').default;
 export default {
   initRouters() {
     let data = routersData;

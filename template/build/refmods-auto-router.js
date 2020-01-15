@@ -97,11 +97,11 @@ function run(devMode){
                     return undefined;
                 }
             }else if(key=='meta'){
-              if(value&&value.type){
-                return {type:value.type};
-              }else{
-                return undefined;
-              }
+                if(value&&value.type){
+                  return {type:value.type};
+                }else{
+                  return undefined;
+                }
             }else{
                 return value;
             }
@@ -114,7 +114,7 @@ function run(devMode){
 }
 
 function writeJs(modulePath,routes){
-    routes=routes.replace(/\"##require_placeholder_begin##/g,'require').replace(/##require_placeholder_end##\"/g,'');
+    routes=routes.replace(/\"##require_placeholder_begin##/g,'require').replace(/##require_placeholder_end##\"/g,'.default');
     var jsContent=`var autoRoutes=${routes}
 export default autoRoutes`;
     var outputFile=path.join(modulePath,aiRelativeBasePath,'auto-routes.js')

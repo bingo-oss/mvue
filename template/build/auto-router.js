@@ -98,9 +98,9 @@ function run(devMode){
 }
 function writeJs(routes){
     routes= routes.replace(/\"##require_placeholder_assign_begin##/g,'_.assign({},require')
-                  .replace(/##require_placeholder_assign_end##\"/g,')')
+                  .replace(/##require_placeholder_assign_end##\"/g,'.default)')
                   .replace(/\"##require_placeholder_begin##/g,'require')
-                  .replace(/##require_placeholder_end##\"/g,'');
+                  .replace(/##require_placeholder_end##\"/g,'.default');
     var jsContent=`var autoRoutes=${routes}
 export default autoRoutes`;
     var outputFile=path.join(aiBasePath,'auto-routes.js')
